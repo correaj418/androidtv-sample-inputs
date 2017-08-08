@@ -964,8 +964,7 @@ public final class Program implements Comparable<Program> {
             Program program = new Program();
             program.copyFrom(mProgram);
             if(mProgram.getStartTimeUtcMillis() >= mProgram.getEndTimeUtcMillis()) {
-                throw new IllegalArgumentException("This program must have defined start and end " +
-                        "times");
+                return null;
             }
             return program;
         }
