@@ -198,7 +198,10 @@ public class XmlTvParser {
             }
             if (parser.getEventType() == XmlPullParser.START_TAG
                     && TAG_PROGRAM.equalsIgnoreCase(parser.getName())) {
-                programs.add(parseProgram(parser));
+                Program program = parseProgram(parser);
+                if (program != null) {
+                    programs.add(program);
+                }
             }
         }
         return new TvListing(channels, programs);
