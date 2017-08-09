@@ -499,18 +499,25 @@ public class XmlTvParser {
             // Place programs into the epg map
             mProgramMap = new HashMap<>();
             for (Channel channel: channels) {
-                List<Program> programsForChannel = new ArrayList<>();
+                List<Program> newProgramsForChannel = new ArrayList<>();
                 Iterator<Program> programIterator = programs.iterator();
+                int channelOriginalNetworkId = channel.getOriginalNetworkId();
                 while (programIterator.hasNext()) {
                     Program program = programIterator.next();
-                    if (program.getChannelId() == channel.getOriginalNetworkId()) {
-                        programsForChannel.add(new Program.Builder(program)
-                            .setChannelId(channel.getId())
-                            .build());
+                    if (program.getChannelId() == channelOriginalNetworkId) {
+                        newProgramsForChannel.add(new Program.Builder(program)
+                                .setChannelId(channel.getId())
+                                .build());
                         programIterator.remove();
                     }
                 }
-                mProgramMap.put(channel.getOriginalNetworkId(), programsForChannel);
+                List<Program> currentProgramsForChannel = mProgramMap.get(channelOriginalNetworkId);
+                if (currentProgramsForChannel == null) {
+                    currentProgramsForChannel = newProgramsForChannel;
+                } else {
+                    currentProgramsForChannel.addAll(newProgramsForChannel);
+                }
+                mProgramMap.put(channelOriginalNetworkId, currentProgramsForChannel);
             }
         }
 
